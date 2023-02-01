@@ -8,17 +8,26 @@ const methodOverride = require("method-override");
 const session = require("./config/session");
 const cors = require("cors");
 const path = require("path");
+const uri = process.env.MONGODB_URI;
 
 const app = express();
 app.use(cors());
 
 app.use(express.static("public"));
 
-mongoose.connect(process.env.DB_URL, {
-  useCreateIndex: true,
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+// mongoose.connect(process.env.DB_URL, {
+//   useCreateIndex: true,
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+// });
+
+app.use(express.static("public"));
+
+ mongoose.connect(uri, {
+   useCreateIndex: true,
+   useNewUrlParser: true,
+   useUnifiedTopology: true,
+ });
 
 app.use(session);
 app.use(bodyParser.urlencoded({ extended: true }));
