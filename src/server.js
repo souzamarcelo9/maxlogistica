@@ -10,6 +10,7 @@ const cors = require("cors");
 const path = require("path");
 const uri = process.env.MONGODB_URI;
 
+
 const app = express();
 app.use(cors());
 
@@ -23,7 +24,7 @@ app.use(express.static("public"));
 
 app.use(express.static("public"));
 
- mongoose.connect(uri, {
+ mongoose.connect("mongodb+srv://jadsuporte:JadSuporte@2021@clustermaxloggi.uujjcoi.mongodb.net/sistema?retryWrites=true&w=majority", {
    useCreateIndex: true,
    useNewUrlParser: true,
    useUnifiedTopology: true,

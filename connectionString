@@ -1,0 +1,11 @@
+mongodb+srv://jadsuporte:JadSuporte@2021@clustermaxloggi.uujjcoi.mongodb.net/?retryWrites=true&w=majority
+
+mongodb+srv://jadsuporte:JadSuporte@2021@clustermaxloggi.uujjcoi.mongodb.net/sistema?retryWrites=true&w=majority
+
+heroku config:set MONGODB_URI="mongodb+srv://yourUsername:yourPassword@yourClusterName.n9z04.mongodb.net/sample_mflix?retryWrites=true&w=majority"
+
+mongodb://jadsuporte:JadSuporte@2021@clustermaxloggi.uujjcoi.mongodb.net:27017sistema?ssl=true&replicaSet=Main-shard-0&authSource=admin&retryWrites=true
+
+mongodb://jadsuporte:JadSuporte%402021@clustermaxloggi.uujjcoi.mongodb.net:27017sistema?ssl=true&replicaSet=Main-shard-0&authSource=admin&retryWrites=true
+
+mongodb://jadsuporte:JadSuporte%402021@clustermaxloggi.uujjcoi.mongodb.net:27017/sistema?ssl=true&replicaSet=Main-shard-0&authSource=admin&retryWrites=true
