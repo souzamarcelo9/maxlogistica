@@ -3,7 +3,7 @@ const MongoDBStore = require("connect-mongodb-session")(session);
 
 module.exports = session({
   store: new MongoDBStore({
-    uri: "mongodb+srv://jadsuporte:JadSuporte@2021@clustermaxloggi.uujjcoi.mongodb.net/sistema?retryWrites=true&w=majority",//process.env.DB_URL,
+    uri: process.env.DB_URL_STORE,
     databaseName: "cms",
     collection: "mySessions",
   }),

@@ -7,7 +7,7 @@
 
     {% block content %}
         <div class="content">
-            <h4>Pedidos de Compra</h4>
+            <h4>Frente de Caixa</h4>
             <form action="/cart" method="post" class="search">
                 <input class="form-control" type="text" placeholder="Código do produto" name="searchBarcode" value="{{searchBarcode}}" autofocus/>
                 <input class="form-control" type="text" placeholder="Nome do produto" name="nome" />
@@ -72,11 +72,11 @@
                         </div>
 
                         <div class="finish">
-                        <button class="btn btn-success"> Salvar Pedido </button>
+                        <button class="btn btn-success"> Finalizar Venda </button>
                     </form>
 
                             <form  action="/sales/deleteall?_method=DELETE" method="POST">
-                                <button class="btn btn-danger"> Cancelar Pedido </button>
+                                <button class="btn btn-danger"> Cancelar Venda </button>
                             </form>
                         </div>
             </div>
