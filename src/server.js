@@ -16,7 +16,7 @@ app.use(cors());
 
 app.use(express.static("public"));
 
-mongoose.connect(uri, {
+mongoose.connect(process.env.DB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
