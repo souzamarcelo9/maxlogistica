@@ -8,13 +8,13 @@
         {% endblock %} 
         <link rel="stylesheet" href="/styles.css"/>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">  
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">  
         
     </head>
     <body>
         <nav class="navbar navbar-dark bg-primary" id="navbartop">
             <div class="container-fluid">
-                <a class="navbar-brand" href="/">Rede Cell</a>
+                <a class="navbar-brand" href="/">Max Logística</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -31,6 +31,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/entrancesandexits">Entrada e Saída</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/precificacoes/new">Precificação</a>
                     </li>
                     <li class="nav-item">
                         <form class="form-logout nav-link" action="/logout" method="post">
@@ -62,8 +65,26 @@
                         <a href="/cart"><i class="bi bi-cart-plus"></i>Realizar Vendas</a>
                     </li>
                     <li>
-                        <a href="/entrancesandexits"><i class="bi bi-bar-chart-line "></i>Entrada e Saída</a>
+                        <a href="/entrancesandexits"><i class="bi bi-bar-chart-line"></i>Entrada e Saída</a>
                     </li>
+
+                    <p class="mt-3">CUSTOS & COZINHA</p>
+
+                    <li>
+                        <a href="/ingredients"><i class="bi bi-egg-fill"></i>Ingredientes</a>
+                    </li>
+
+                    <li>
+                        <a href="/recipes"><i class="bi bi-journal-richtext"></i>Receitas</a>
+                    </li>
+
+                    <li>
+                        <a href="/precificacoes"><i class="bi bi-cash-coin"></i>Precificação</a>
+                    </li>       
+                   
+                   <li>
+                     <a href="/fixedcosts"><i class="bi bi-building"></i> Custos fixos</a>
+                   </li>                                 
                 </ul>
 
                 <form class="form-logout" action="/logout" method="post">
@@ -77,7 +98,8 @@
                 {% endblock %}  
             </div>
         </div>  
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
     </body>
 </html>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+

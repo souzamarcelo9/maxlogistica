@@ -10,8 +10,15 @@ const ExitController = require("./controllers/ExitController");
 const EntranceController = require("./controllers/EntranceController");
 const EntranceAndExitController = require("./controllers/EntranceAndExitController");
 const SessionController = require("./controllers/SessionController");
+const PrecificacaoController = require("./controllers/PrecificacaoController");
+const IngredientController = require("./controllers/IngredientController");
+const RecipeController = require("./controllers/RecipeController");
+const PrecificationController = require("./controllers/PrecificationController");
+const FixedCostController = require("./controllers/FixedCostController");
+
 
 const middleware = require("./middlewares/session");
+const session = require("express-session");
 
 const routes = express.Router();
 
@@ -40,7 +47,7 @@ routes.put("/categorys/edit/:id", CategoryController.update);
 routes.delete("/categorys/delete/:id", CategoryController.destroy);
 
 routes.get("/productslist", ProductController.index);
-routes.post("/productslist", ProductController.index);
+//routes.post("/productslist", ProductController.index);
 routes.get("/products", ProductController.create);
 routes.post("/products", ProductController.store);
 routes.get("/products/edit/:id", ProductController.edit);
@@ -69,11 +76,56 @@ routes.get("/exits/edit/:id", ExitController.edit);
 routes.put("/exits/edit/:id", ExitController.update);
 routes.delete("/exits/delete/:id", ExitController.destroy);
 
+//precificação
+// INGREDIENTS
+routes.get("/ingredients", IngredientController.index);
+routes.get("/ingredients/new", IngredientController.createForm);
+routes.post("/ingredients", IngredientController.store);
+routes.post("/ingredients/delete/:id", IngredientController.delete);
+
+// RECIPES (fichas técnicas)
+routes.get("/recipes", RecipeController.index);
+routes.get("/recipes/new", RecipeController.createForm);
+routes.post("/recipes", RecipeController.store);
+routes.post("/recipes/delete/:id", RecipeController.delete);
+
+// PRECIFICAÇÕES
+routes.get("/precificacoes", PrecificationController.index);
+routes.get("/precificacoes/new", PrecificationController.createForm);
+routes.post("/precificacoes", PrecificationController.store);
+// Listar precificações
+//routes.get("/precificacoes", session, PrecificacaoController.index);
+
+// Formulário nova precificação
+//routes.get("/precificacoes/new", middleware, PrecificacaoController.createForm);
+
+// Salvar
+//routes.post("/precificacoes", middleware, PrecificacaoController.store);
+
+// Detalhe
+//routes.get("/precificacoes/:id", middleware, PrecificacaoController.show);
+// Duplicar
+routes.get("/precificacoes/duplicate/:id", PrecificationController.duplicate);
+// Show (detalhes)
+routes.get("/precificacoes/:id", PrecificationController.show);
+// PDF
+routes.get("/precificacoes/:id/pdf", PrecificationController.generatePDF);
+routes.delete("/precificacoes/delete/:id", PrecificationController.delete);
+
 routes.get("/entrances", EntranceController.index);
 routes.post("/entrancesdate", EntranceController.index);
 
 routes.get("/entrancesandexitsdatails", EntranceAndExitController.index);
 routes.post("/entrancesandexitsdatailsdates", EntranceAndExitController.index);
+
+// CUSTOS FIXOS
+routes.get("/fixedcosts", FixedCostController.index);
+routes.get("/fixedcosts/new", FixedCostController.createForm);
+routes.post("/fixedcosts", FixedCostController.store);
+routes.get("/fixedcosts/edit/:id", FixedCostController.editForm);
+routes.post("/fixedcosts/edit/:id", FixedCostController.update);
+routes.post("/fixedcosts/delete/:id", FixedCostController.delete);
+
 routes.get("/entrancesandexits", (req, res) => {
   return res.render("entranceandexit/list");
 });

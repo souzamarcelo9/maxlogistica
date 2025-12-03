@@ -1,0 +1,38 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+<div class="container py-4">
+
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body p-4">
+      <h2 class="fw-bold text-primary mb-3">
+        <i class="bi bi-plus-circle"></i> Novo Custo Fixo
+      </h2>
+
+      <form action="/fixedcosts" method="post" class="row g-3">
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Nome do custo *</label>
+          <input type="text" name="name" class="form-control" placeholder="Ex: Aluguel, Luz, Água" required>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label fw-semibold">Valor mensal (R$) *</label>
+          <input type="text" name="monthlyValue" class="form-control" placeholder="Ex: 1500,00" required>
+        </div>
+
+        <div class="col-12 mt-3">
+          <a href="/fixedcosts" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Voltar
+          </a>
+          <button type="submit" class="btn btn-success">
+            <i class="bi bi-check-lg"></i> Salvar
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

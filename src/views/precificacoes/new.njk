@@ -1,0 +1,353 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+
+<div class="container py-4">
+
+  <!-- CABEÇALHO PRINCIPAL -->
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body p-4">
+
+      <h2 class="fw-bold text-primary mb-1">
+        <i class="bi bi-cash-stack"></i> Nova Precificação
+      </h2>
+
+      <p class="text-muted mb-0" style="font-size: 15px;">
+        Escolha o produto e tamanho. Os itens da receita serão carregados automaticamente.
+      </p>
+
+    </div>
+  </div>
+
+  <form action="/precificacoes" method="POST" id="form-precificacao">
+
+    <!-- HIDDEN: recipeId -->
+    <input type="hidden" name="recipeId" id="recipeId">
+
+    <!-- SEÇÃO 1 - DADOS DO PRODUTO -->
+    <div class="card shadow-sm border-0 mb-4">
+      <div class="card-body p-4">
+
+        <h5 class="fw-semibold text-secondary mb-3">
+          <i class="bi bi-box"></i> Informações do Produto
+        </h5>
+
+        <div class="row g-4">
+
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">Produto cadastrado</label>
+            <select name="productId" id="productId" class="form-select" onchange="onProductOrSizeChange()">
+              <option value="">Selecione…</option>
+              {% for p in products %}
+                <option value="{{ p._id }}" data-name="{{ p.name }}">{{ p.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label fw-semibold">Tamanho *</label>
+            <select id="sizeSelect" name="size" class="form-select" onchange="onProductOrSizeChange()">
+              <option value="">Selecione…</option>
+              <option value="200 ml">200 ml</option>
+              <option value="300 ml">300 ml</option>
+              <option value="500 ml">500 ml</option>
+              <option value="700 ml">700 ml</option>
+              <option value="1000 ml">1000 ml</option>
+            </select>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label fw-semibold">Nome da precificação *</label>
+            <input type="text" name="productName" id="productName" class="form-control" placeholder="Ex: Açaí 500ml" required>
+          </div>
+
+          <div class="col-md-2">
+            <label class="form-label fw-semibold">Margem (%)</label>
+            <input type="number" name="margin" id="margin" class="form-control"
+                   value="{{ defaultMargin }}" step="0.1" oninput="recalcTotals()">
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SEÇÃO 2 - ITENS DE CUSTO  -->
+    <div class="card shadow-sm border-0 mb-4">
+      <div class="card-body p-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="fw-semibold text-secondary mb-0">
+            <i class="bi bi-list-check"></i> Itens de Custo
+          </h5>
+          <button type="button" class="btn btn-outline-primary btn-sm" onclick="addRowManual()">
+            <i class="bi bi-plus-circle"></i> Adicionar item manual
+          </button>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Tipo</th>
+                <th>Nome</th>
+                <th>Unidade</th>
+                <th>Qtde pacote</th>
+                <th>Valor pacote</th>
+                <th>Qtde usada</th>
+                <th>Custo usado</th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody id="items-body"></tbody>
+
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SEÇÃO 3 - RESUMO FINAL -->
+    <div class="card shadow-sm border-0 mb-4">
+      <div class="card-body p-4">
+
+        <h5 class="fw-semibold text-secondary mb-3">
+          <i class="bi bi-calculator"></i> Resumo da Precificação
+        </h5>
+
+        <div class="row g-4">
+
+          <div class="col-md-6">
+            <div class="card bg-light border-0">
+              <div class="card-body text-center">
+                <h6 class="text-muted mb-1">Custo total</h6>
+                <h3 class="fw-bold text-danger mb-0">
+                  R$ <span id="costPreview">0,00</span>
+                </h3>
+                <input type="hidden" id="totalCost" name="totalCost">
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="card bg-primary text-white border-0">
+              <div class="card-body text-center">
+                <h6 class="text-white-50 mb-1">Preço sugerido</h6>
+                <h3 class="fw-bold mb-0">
+                  R$ <span id="pricePreview">0,00</span>
+                </h3>
+                <input type="hidden" id="suggestedPrice" name="suggestedPrice">
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- OBSERVAÇÕES + BOTÃO SALVAR -->
+    <div class="card shadow-sm border-0 mb-5">
+      <div class="card-body p-4">
+
+        <label class="form-label fw-semibold">Observações</label>
+        <textarea name="notes" class="form-control" rows="3"></textarea>
+
+        <button type="submit" class="btn btn-success btn-lg mt-4 w-100">
+          <i class="bi bi-save"></i> Salvar Precificação
+        </button>
+
+      </div>
+    </div>
+
+  </form>
+
+</div>
+
+
+<!-- RECEITAS DO CONTROLLER -->
+<script>
+  const recipesData = {{ recipesJson | safe }};
+</script>
+
+
+<!-- SCRIPT -->
+<script>
+
+/* ---------------------------------------------
+   Quando mudar produto ou tamanho → carrega receita
+---------------------------------------------- */
+function onProductOrSizeChange() {
+  const productId = document.getElementById("productId").value;
+  const size = document.getElementById("sizeSelect").value;
+  const inputName = document.getElementById("productName");
+
+  if (productId) {
+    const name = document.querySelector(`#productId option[value="${productId}"]`).dataset.name;
+    if (name) inputName.value = `${name} ${size}`;
+  }
+
+  const recipe = recipesData.find(r =>
+    r.productId === productId && r.size === size
+  );
+
+  const tbody = document.getElementById("items-body");
+  tbody.innerHTML = ""; // limpa tabela
+
+  if (!recipe) return;
+
+  document.getElementById("recipeId").value = recipe.id;
+
+  recipe.items.forEach(item => {
+    addRowFromRecipe(item);
+  });
+
+  recalcTotals();
+}
+
+
+/* ---------------------------------------------
+   Adiciona linha carregada automaticamente
+---------------------------------------------- */
+function addRowFromRecipe(item) {
+  const tbody = document.getElementById("items-body");
+
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td><input class="form-control" name="itemType" value="${item.type}" readonly></td>
+    <td><input class="form-control" name="itemName" value="${item.name}" readonly></td>
+    <td><input class="form-control" name="itemUnit" value="${item.unit}" readonly></td>
+    <td><input type="number" class="form-control" name="itemPackageQty" value="${item.packageQty}" readonly></td>
+    <td><input type="number" class="form-control" name="itemPackageCost" value="${item.packageCost}" readonly></td>
+    <td><input type="number" class="form-control" name="itemUsedQty" value="${item.usedQty}" step="0.01" oninput="recalcRow(this)"></td>
+    <td><input type="number" class="form-control" name="itemUsedCost" readonly></td>
+    <td></td>
+  `;
+
+  tbody.appendChild(tr);
+  recalcRow(tr.querySelector('[name="itemUsedQty"]'));
+}
+
+
+/* ---------------------------------------------
+   Adiciona linha manual (igual sua original)
+---------------------------------------------- */
+function addRowManual() {
+  const tbody = document.getElementById('items-body');
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td>
+      <select name="itemType" class="form-select">
+        <option value="INGREDIENTE">Ingrediente</option>
+        <option value="INSUMO">Insumo</option>
+        <option value="MAO_DE_OBRA">Mão de obra</option>
+      </select>
+    </td>
+
+    <td><input type="text" name="itemName" class="form-control" required></td>
+    <td><input type="text" name="itemUnit" class="form-control" placeholder="g, ml, un, hora"></td>
+    <td><input type="number" name="itemPackageQty" class="form-control" step="0.01" oninput="recalcRow(this)"></td>
+    <td><input type="number" name="itemPackageCost" class="form-control" step="0.01" oninput="recalcRow(this)"></td>
+    <td><input type="number" name="itemUsedQty" class="form-control" step="0.01" oninput="recalcRow(this)"></td>
+    <td><input type="number" name="itemUsedCost" class="form-control" readonly></td>
+
+    <td class="text-end">
+      <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeRow(this)">
+        <i class="bi bi-trash"></i>
+      </button>
+    </td>
+  `;
+  tbody.appendChild(tr);
+}
+
+
+/* ---------------------------------------------
+   Cálculo de custo proporcional
+---------------------------------------------- */
+function recalcRow(input) {
+  const tr = input.closest('tr');
+  const pkgQty = parseFloat(tr.querySelector('[name="itemPackageQty"]').value) || 0;
+  const pkgCost = parseFloat(tr.querySelector('[name="itemPackageCost"]').value) || 0;
+  const usedQty = parseFloat(tr.querySelector('[name="itemUsedQty"]').value) || 0;
+
+  const usedCost = pkgQty > 0 ? (pkgCost / pkgQty) * usedQty : 0;
+
+  tr.querySelector('[name="itemUsedCost"]').value = usedCost.toFixed(2);
+  recalcTotals();
+}
+
+
+/* ---------------------------------------------
+   Cálculo total e sugerido
+---------------------------------------------- */
+function recalcTotals() {
+  let totalCost = 0;
+
+  document.querySelectorAll('#items-body tr').forEach(tr => {
+    totalCost += parseFloat(tr.querySelector('[name="itemUsedCost"]').value) || 0;
+  });
+
+  document.getElementById('totalCost').value = totalCost.toFixed(2);
+  document.getElementById('costPreview').innerText = totalCost.toFixed(2).replace('.', ',');
+
+  const margin = parseFloat(document.getElementById('margin').value) || 0;
+  const suggested = totalCost * (1 + margin / 100);
+
+  document.getElementById('suggestedPrice').value = suggested.toFixed(2);
+  document.getElementById('pricePreview').innerText = suggested.toFixed(2).replace('.', ',');
+}
+
+
+/* --------------------------------------------- */
+function removeRow(btn) {
+  btn.closest('tr').remove();
+  recalcTotals();
+}
+</script>
+
+<script>
+  // Valor do rateio de custo fixo por unidade vindo do backend
+  const FIXED_COST_PER_UNIT = {{ fixedCostPerUnit }};
+
+  document.addEventListener("DOMContentLoaded", function () {
+    if (!FIXED_COST_PER_UNIT || !document.getElementById("items-body")) return;
+
+    const tbody = document.getElementById("items-body");
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td>
+        <input type="text" name="itemType" class="form-control" value="CUSTO_FIXO_RATEADO" readonly>
+      </td>
+      <td>
+        <input type="text" name="itemName" class="form-control" value="Rateio custos fixos" readonly>
+      </td>
+      <td>
+        <input type="text" name="itemUnit" class="form-control" value="un" readonly>
+      </td>
+      <td>
+        <input type="number" name="itemPackageQty" class="form-control" value="1" readonly>
+      </td>
+      <td>
+        <input type="number" name="itemPackageCost" class="form-control" value="${FIXED_COST_PER_UNIT.toFixed(2)}" readonly>
+      </td>
+      <td>
+        <input type="number" name="itemUsedQty" class="form-control" value="1" readonly>
+      </td>
+      <td>
+        <input type="number" name="itemUsedCost" class="form-control" value="${FIXED_COST_PER_UNIT.toFixed(2)}" readonly>
+      </td>
+      <td></td>
+    `;
+
+    tbody.appendChild(tr);
+
+    // Recalcula os totais para incluir o rateio
+    if (typeof recalcTotals === "function") {
+      recalcTotals();
+    }
+  });
+</script>
+
+{% endblock %}

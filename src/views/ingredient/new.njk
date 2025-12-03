@@ -1,0 +1,60 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+
+<div class="container py-4">
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body p-4">
+      <h3 class="fw-bold text-primary mb-1">
+        <i class="bi bi-basket"></i> Novo Ingrediente / Insumo
+      </h3>
+      <p class="text-muted mb-0">Cadastre matérias-primas, embalagens e mão de obra.</p>
+    </div>
+  </div>
+
+  <div class="card shadow-sm border-0">
+    <div class="card-body p-4">
+      <form action="/ingredients" method="POST">
+
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Nome *</label>
+            <input type="text" name="name" class="form-control" required>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label fw-semibold">Tipo</label>
+            <select name="type" class="form-select">
+              <option value="INGREDIENTE">Ingrediente</option>
+              <option value="INSUMO">Insumo</option>
+              <option value="MAO_DE_OBRA">Mão de obra</option>
+            </select>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label fw-semibold">Unidade</label>
+            <input type="text" name="unit" class="form-control" placeholder="g, ml, un, hora" required>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Quantidade do pacote *</label>
+            <input type="number" step="0.01" name="packageQty" class="form-control" required>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Custo do pacote (R$) *</label>
+            <input type="number" step="0.01" name="packageCost" class="form-control" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-success">
+          <i class="bi bi-save"></i> Salvar ingrediente
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,7 +1,7 @@
 {% extends "layout.njk" %}
 
 {% block head %}
-    <title>Loja Maramba</title>
+    <title>Max Logística</title>
     <link rel="stylesheet" href="/home.css"/>
 {% endblock %}    
 
@@ -34,7 +34,23 @@
                 </form>
             </div> 
         </div>
+        <br/>
+    <br/>
+    <br/>
+    <div class="row">
+            <div class="col-md-4">
+                <form action="/precificacoes">
+                    <button class="button entrance-exit">Precificação <i class="bi bi-cash-coin"></i></button>
+                </form>
+            </div>   
+            <div class="col-md-4">
+                <form action="/recipes">
+                    <button class="button datails-sales">Receitas <i class="bi bi-journal-richtext"></i></button>
+                </form>
+            </div> 
+        </div>
     </div>
+    
 {% endblock %}
         
         

@@ -1,0 +1,72 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+<div class="container py-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold text-primary mb-1">
+        <i class="bi bi-building"></i> Custos Fixos Mensais
+      </h2>
+      <p class="text-muted mb-0">Registre luz, água, aluguel, internet e demais custos fixos.</p>
+    </div>
+
+    <a href="/fixedcosts/new" class="btn btn-primary">
+      <i class="bi bi-plus-circle"></i> Novo Custo Fixo
+    </a>
+  </div>
+
+  {% if costs.length === 0 %}
+    <div class="alert alert-info">
+      Nenhum custo fixo cadastrado ainda.
+    </div>
+  {% else %}
+
+    <div class="card shadow-sm border-0 mb-3">
+      <div class="card-body">
+
+        <table class="table table-hover align-middle mb-3">
+          <thead class="table-light">
+            <tr>
+              <th>Nome</th>
+              <th style="width: 200px;">Valor mensal (R$)</th>
+              <th style="width: 160px;">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for c in costs %}
+              <tr>
+                <td>{{ c.name }}</td>
+                <td>R$ {{ c.monthlyValue.toFixed(2) }}</td>
+                <td>
+                  <div class="d-flex gap-2">
+                    <a href="/fixedcosts/edit/{{ c._id }}" class="btn btn-sm btn-outline-secondary">
+                      <i class="bi bi-pencil"></i>
+                    </a>
+
+                    <form action="/fixedcosts/delete/{{ c._id }}" method="post"
+                          onsubmit="return confirm('Confirma excluir este custo fixo?')">
+                      <button type="submit" class="btn btn-sm btn-outline-danger">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <div class="d-flex justify-content-end">
+          <h5 class="fw-semibold mb-0">
+            Total mensal: <span class="text-success">R$ {{ total.toFixed(2) }}</span>
+          </h5>
+        </div>
+
+      </div>
+    </div>
+
+  {% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,149 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+
+<div class="container py-4">
+
+  <!-- HEADER -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-primary">
+      <i class="bi bi-receipt-cutoff"></i> Detalhes da Precificação
+    </h2>
+
+    <div class="d-flex gap-2">
+      <a href="/precificacoes/{{ precificacao._id }}/pdf" class="btn btn-danger">
+        <i class="bi bi-filetype-pdf"></i> PDF
+      </a>
+
+      <a href="/precificacoes/duplicate/{{ precificacao._id }}" class="btn btn-secondary">
+        <i class="bi bi-files"></i> Duplicar
+      </a>
+
+      <a href="/precificacoes" class="btn btn-outline-primary">
+        <i class="bi bi-arrow-left"></i> Voltar
+      </a>
+    </div>
+  </div>
+
+  <!-- CARDS -->
+  <div class="row g-4 mb-4">
+
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0">
+        <div class="card-body text-center">
+          <h6 class="text-muted">Produto</h6>
+          <h4 class="fw-bold">{{ precificacao.productName }}</h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0">
+        <div class="card-body text-center">
+          <h6 class="text-muted">Margem (%)</h6>
+          <h4 class="fw-bold text-primary">{{ precificacao.margin }}%</h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0 bg-primary text-white">
+        <div class="card-body text-center">
+          <h6 class="text-white-50">Preço Sugerido</h6>
+          <h4 class="fw-bold">R$ {{ precificacao.suggestedPrice.toFixed(2) }}</h4>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- GRÁFICO -->
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+      <h5 class="fw-semibold text-secondary mb-3">
+        <i class="bi bi-pie-chart"></i> Distribuição dos Custos
+      </h5>
+      <canvas id="chart"></canvas>
+    </div>
+  </div>
+
+
+  <!-- TABELA DE ITENS -->
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+
+      <h5 class="fw-semibold text-secondary mb-3">
+        <i class="bi bi-list-ul"></i> Itens da Precificação
+      </h5>
+
+      <table class="table table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Tipo</th>
+            <th>Nome</th>
+            <th>Unidade</th>
+            <th>Qtde utilizada</th>
+            <th>Custo</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for item in items %}
+            <tr>
+              <td>{{ item.type }}</td>
+              <td>{{ item.ingredientName }}</td>
+              <td>{{ item.unit }}</td>
+              <td>{{ item.usedQty }}</td>
+              <td>R$ {{ item.usedCost.toFixed(2) }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+
+      </table>
+
+    </div>
+  </div>
+
+
+  {% if precificacao.notes %}
+  <!-- OBSERVAÇÕES -->
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+      <h5 class="fw-semibold text-secondary mb-2">
+        <i class="bi bi-journal-text"></i> Observações
+      </h5>
+      <p class="text-muted">{{ precificacao.notes }}</p>
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+
+
+<!-- CHART.JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  const items = {{ itemsJson | safe }};
+
+  const ctx = document.getElementById("chart");
+
+  new Chart(ctx, {
+    type: "pie",
+    data: {
+      labels: items.map(i => i.ingredientName),
+      datasets: [{
+        data: items.map(i => i.usedCost),
+        backgroundColor: [
+          "#007bff","#6610f2","#6f42c1",
+          "#e83e8c","#dc3545","#fd7e14",
+          "#ffc107","#28a745","#20c997",
+          "#17a2b8"
+        ]
+      }]
+    }
+  });
+</script>
+
+{% endblock %}

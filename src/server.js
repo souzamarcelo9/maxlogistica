@@ -10,13 +10,11 @@ const cors = require("cors");
 const path = require("path");
 const uri = process.env.MONGODB_URI;
 
-
 const app = express();
 app.use(cors());
-
 app.use(express.static("public"));
 
-mongoose.connect(process.env.MONGODB_URI, {
+mongoose.connect(process.env.DB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })

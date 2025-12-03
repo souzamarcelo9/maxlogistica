@@ -1,0 +1,154 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+
+<div class="container py-4">
+
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body p-4">
+      <h3 class="fw-bold text-primary mb-1">
+        <i class="bi bi-clipboard-plus"></i> Nova Receita / Ficha Técnica
+      </h3>
+      <p class="text-muted mb-0">
+        Defina os ingredientes e quantidades para cada tamanho de produto final.
+      </p>
+    </div>
+  </div>
+
+  <div class="card shadow-sm border-0 mb-5">
+    <div class="card-body p-4">
+      <form action="/recipes" method="POST">
+
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Produto final</label>
+            <select name="productId" class="form-select" required>
+              <option value="">Selecione um produto…</option>
+              {% for p in products %}
+                <option value="{{ p._id }}">{{ p.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label fw-semibold">Tamanho</label>
+            <select name="size" class="form-select" required>
+              <option value="200 ml">200 ml</option>
+              <option value="300 ml">300 ml</option>
+              <option value="500 ml">500 ml</option>
+              <option value="700 ml">700 ml</option>
+              <option value="1000 ml">1000 ml</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="fw-semibold text-secondary mb-0">
+            <i class="bi bi-list-check"></i> Ingredientes da receita
+          </h5>
+          <button type="button" class="btn btn-outline-primary btn-sm" onclick="addRecipeRow()">
+            <i class="bi bi-plus-circle"></i> Adicionar ingrediente
+          </button>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Ingrediente</th>
+                <th>Unidade</th>
+                <th>Qtd pacote</th>
+                <th>Custo pacote</th>
+                <th>Qtd usada</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="recipe-items-body">
+              <tr>
+                <td>
+                  <select name="ingredientId" class="form-select" onchange="syncIngredientInfo(this)">
+                    <option value="">Selecione…</option>
+                    {% for ing in ingredients %}
+                      <option value="{{ ing._id }}"
+                              data-unit="{{ ing.unit }}"
+                              data-pkgqty="{{ ing.packageQty }}"
+                              data-pkgcost="{{ ing.packageCost }}">
+                        {{ ing.name }}
+                      </option>
+                    {% endfor %}
+                  </select>
+                </td>
+                <td><input type="text" class="form-control" disabled></td>
+                <td><input type="number" class="form-control" step="0.01" disabled></td>
+                <td><input type="number" class="form-control" step="0.01" disabled></td>
+                <td><input type="number" name="usedQty" class="form-control" step="0.01" required></td>
+                <td class="text-end">
+                  <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeRecipeRow(this)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <button type="submit" class="btn btn-success mt-3">
+          <i class="bi bi-save"></i> Salvar Receita
+        </button>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+function addRecipeRow() {
+  const tbody = document.getElementById('recipe-items-body');
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td>
+      <select name="ingredientId" class="form-select" onchange="syncIngredientInfo(this)">
+        <option value="">Selecione…</option>
+        {% for ing in ingredients %}
+          <option value="{{ ing._id }}"
+                  data-unit="{{ ing.unit }}"
+                  data-pkgqty="{{ ing.packageQty }}"
+                  data-pkgcost="{{ ing.packageCost }}">
+            {{ ing.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </td>
+    <td><input type="text" class="form-control" disabled></td>
+    <td><input type="number" class="form-control" step="0.01" disabled></td>
+    <td><input type="number" class="form-control" step="0.01" disabled></td>
+    <td><input type="number" name="usedQty" class="form-control" step="0.01" required></td>
+    <td class="text-end">
+      <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeRecipeRow(this)">
+        <i class="bi bi-trash"></i>
+      </button>
+    </td>
+  `;
+  tbody.appendChild(tr);
+}
+
+function removeRecipeRow(btn) {
+  btn.closest('tr').remove();
+}
+
+function syncIngredientInfo(selectEl) {
+  const opt = selectEl.options[selectEl.selectedIndex];
+  const unit = opt.getAttribute('data-unit') || "";
+  const pkgQty = opt.getAttribute('data-pkgqty') || "";
+  const pkgCost = opt.getAttribute('data-pkgcost') || "";
+
+  const tr = selectEl.closest('tr');
+  const tds = tr.querySelectorAll('td');
+
+  tds[1].querySelector('input').value = unit;
+  tds[2].querySelector('input').value = pkgQty;
+  tds[3].querySelector('input').value = pkgCost;
+}
+</script>
+
+{% endblock %}

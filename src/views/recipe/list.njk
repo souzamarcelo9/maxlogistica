@@ -1,0 +1,51 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="fw-bold text-primary mb-0">
+      <i class="bi bi-clipboard-check"></i> Receitas / Fichas Técnicas
+    </h3>
+    <a href="/recipes/new" class="btn btn-primary">
+      <i class="bi bi-plus-circle"></i> Nova receita
+    </a>
+  </div>
+
+  <div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+      <table class="table mb-0 table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Produto</th>
+            <th>Tamanho</th>
+            <th>Qtde itens</th>
+            <th>Data</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in recipes %}
+            <tr>
+              <td>{{ r.product.name }}</td>
+              <td>{{ r.size }}</td>
+              <td>{{ r.items.length }}</td>
+              <td>{{ r.createdAt.toLocaleDateString() }}</td>
+              <td class="text-end">
+                <form action="/recipes/delete/{{ r._id }}" method="POST" onsubmit="return confirm('Excluir receita?')">
+                  <button class="btn btn-sm btn-outline-danger">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </form>
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="5" class="text-center text-muted py-3">Nenhuma receita cadastrada.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
