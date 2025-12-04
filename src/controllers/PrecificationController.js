@@ -26,15 +26,17 @@ class PrecificationController {
       productId: String(r.product._id),
       productName: r.product.name,
       size: r.size,
-      items: r.items.map((it) => ({
-        ingredientId: String(it.ingredient._id),
-        name: it.ingredient.name,
-        type: it.ingredient.type,
-        unit: it.ingredient.unit,
-        packageQty: it.ingredient.packageQty,
-        packageCost: it.ingredient.packageCost,
-        usedQty: it.usedQty,
-      })),
+      items: r.items
+  .filter(it => it.ingredient) // evita itens sem ingrediente
+  .map((it) => ({
+    ingredientId: String(it.ingredient._id),
+    name: it.ingredient.name,
+    type: it.ingredient.type,
+    unit: it.ingredient.unit,
+    packageQty: it.ingredient.packageQty,
+    packageCost: it.ingredient.packageCost,
+    usedQty: it.usedQty,
+     })),
     }))
   );
 
