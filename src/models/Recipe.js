@@ -22,11 +22,10 @@ const RecipeSchema = new Schema({
   },
   size: {
     type: String,
-    enum: ["200 ml", "300 ml", "500 ml", "700 ml", "1000 ml"], // lista fixa que você pediu
+    enum: ["200 ml", "300 ml", "500 ml", "700 ml", "1000 ml","200 g","300 g","500 g","700 g","1000 g","1 kg","2 kg","3 kg","4 kg","5 kg"], // lista fixa
     required: true,
   },
-  items: [RecipeItemSchema], // ingredientes + quantidades
-
+  items: [RecipeItemSchema], // ingredientes + quantidades  
   createdAt: {
     type: Date,
     default: Date.now,
