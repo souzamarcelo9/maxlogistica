@@ -2,6 +2,21 @@
 
 {% block content %}
 
+{% if brokenRecipes.length > 0 %}
+  <div class="alert alert-warning">
+    <strong>Atenção!</strong> Algumas receitas possuem ingredientes removidos:<br>
+    <ul>
+      {% for r in brokenRecipes %}
+        <li>
+          Receita de <strong>{{ r.product.name }}</strong> ({{ r.size }})
+          possui itens faltando.
+        </li>
+      {% endfor %}
+    </ul>
+    Recomenda-se corrigir as receitas antes de realizar a precificação.
+  </div>
+{% endif %}
+
 <div class="container py-4">
 
   <!-- CABEÇALHO PRINCIPAL -->
@@ -47,6 +62,7 @@
           <div class="col-md-3">
             <label class="form-label fw-semibold">Tamanho *</label>
             <select id="sizeSelect" name="size" class="form-select" onchange="onProductOrSizeChange()">
+              <option value="1 un">1 un</option>
               <option value="200 ml">200 ml</option>
               <option value="300 ml">300 ml</option>
               <option value="500 ml">500 ml</option>

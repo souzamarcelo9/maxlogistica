@@ -17,8 +17,13 @@ class PrecificationController {
   const products = await Product.find().sort({ name: 1 });
 
   const recipes = await Recipe.find()
-    .populate("product")
-    .populate("items.ingredient");
+  .populate("product")
+  .populate("items.ingredient");
+
+const brokenRecipes = recipes.filter(r =>
+  r.items.some(it => !it.ingredient)
+);
+
 
   const recipesJson = JSON.stringify(
     recipes.map((r) => ({
@@ -75,6 +80,7 @@ class PrecificationController {
     products,
     recipesJson,
     defaultMargin: 70,
+    brokenRecipes,
     fixedCostPerUnit,
   });
  }
