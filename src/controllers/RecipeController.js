@@ -10,14 +10,14 @@ class RecipeController {
       .populate("items.ingredient")
       .sort({ createdAt: -1 });
 
-    return res.render("recipe/list", { recipes });
+    return res.render("recipes/list", { recipes });
   }
 
   async createForm(req, res) {
     const products = await Product.find().sort({ name: 1 });
     const ingredients = await Ingredient.find().sort({ name: 1 });
 
-    return res.render("recipe/new", {
+    return res.render("recipes/new", {
       products,
       ingredients,
     });
@@ -56,6 +56,43 @@ class RecipeController {
   async delete(req, res) {
     const { id } = req.params;
     await Recipe.findByIdAndDelete(id);
+    return res.redirect("/recipes");
+  }
+
+  // --- NOVO: FORMULÁRIO DE EDIÇÃO ---
+  async editForm(req, res) {
+    const recipe = await Recipe.findById(req.params.id)
+      .populate("items.ingredient");
+
+    const ingredients = await Ingredient.find().sort({ name: 1 });
+
+    return res.render("recipes/edit", {
+      recipe,
+      ingredients
+    });
+  }
+
+  // --- NOVO: SALVAR EDIÇÃO ---
+  async update(req, res) {
+    const { id } = req.params;
+    let { ingredientId, usedQty } = req.body;
+
+    function toArray(val) {
+      return Array.isArray(val) ? val : [val];
+    }
+
+    ingredientId = toArray(ingredientId);
+    usedQty = toArray(usedQty);
+
+    const items = ingredientId.map((id, idx) => ({
+      ingredient: id,
+      usedQty: Number(usedQty[idx] || 0),
+    }));
+
+    await Recipe.findByIdAndUpdate(id, {
+      items
+    });
+
     return res.redirect("/recipes");
   }
 }

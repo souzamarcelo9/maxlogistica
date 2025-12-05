@@ -10,7 +10,7 @@ const ExitController = require("./controllers/ExitController");
 const EntranceController = require("./controllers/EntranceController");
 const EntranceAndExitController = require("./controllers/EntranceAndExitController");
 const SessionController = require("./controllers/SessionController");
-const PrecificacaoController = require("./controllers/PrecificacaoController");
+//const PrecificacaoController = require("./controllers/PrecificacaoController");
 const IngredientController = require("./controllers/IngredientController");
 const RecipeController = require("./controllers/RecipeController");
 const PrecificationController = require("./controllers/PrecificationController");
@@ -83,10 +83,13 @@ routes.get("/ingredients/new", IngredientController.createForm);
 routes.post("/ingredients", IngredientController.store);
 routes.post("/ingredients/delete/:id", IngredientController.delete);
 
-// RECIPES (fichas técnicas)
+
+// RECEITAS (FICHAS TÉCNICAS)
 routes.get("/recipes", RecipeController.index);
 routes.get("/recipes/new", RecipeController.createForm);
 routes.post("/recipes", RecipeController.store);
+routes.get("/recipes/edit/:id", RecipeController.editForm);
+routes.put("/recipes/edit/:id", RecipeController.update);
 routes.post("/recipes/delete/:id", RecipeController.delete);
 
 // PRECIFICAÇÕES

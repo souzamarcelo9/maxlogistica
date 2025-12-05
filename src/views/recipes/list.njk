@@ -21,6 +21,7 @@
             <th>Qtde itens</th>
             <th>Data</th>
             <th></th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -29,7 +30,12 @@
               <td>{{ r.product.name }}</td>
               <td>{{ r.size }}</td>
               <td>{{ r.items.length }}</td>
-              <td>{{ r.createdAt.toLocaleDateString() }}</td>
+              <td>{{ r.createdAt.toLocaleDateString() }}</td>              
+              <td class="text-end">
+                 <a href="/recipes/edit/{{ r._id }}" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-pencil-square"></i>
+                </a>
+              </td>
               <td class="text-end">
                 <form action="/recipes/delete/{{ r._id }}" method="POST" onsubmit="return confirm('Excluir receita?')">
                   <button class="btn btn-sm btn-outline-danger">

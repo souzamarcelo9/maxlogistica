@@ -1,0 +1,116 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+
+<div class="container py-4">
+
+  <!-- Header -->
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+      <h2 class="fw-bold text-primary mb-1">
+        <i class="bi bi-receipt-cutoff"></i> Editar Receita / Ficha Técnica
+      </h2>
+      <p class="text-muted">Atualize os ingredientes e quantidades utilizados.</p>
+    </div>
+  </div>
+
+  <form action="/recipes/edit/{{ recipe._id }}?_method=PUT" method="POST">
+
+    <div class="card shadow-sm border-0 mb-4">
+      <div class="card-body">
+
+        <h5 class="fw-semibold text-secondary mb-3">
+          <i class="bi bi-list-ul"></i> Ingredientes
+        </h5>
+
+        <table class="table align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Ingrediente</th>
+              <th>Qtde usada</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody id="items-table">
+
+            {% for item in recipe.items %}
+            <tr>
+              <td>
+                <select name="ingredientId" class="form-select">
+                  {% for ing in ingredients %}
+                  <option value="{{ ing._id }}"
+                    {% if ing._id == item.ingredient._id %}selected{% endif %}>
+                    {{ ing.name }} ({{ ing.unit }})
+                  </option>
+                  {% endfor %}
+                </select>
+              </td>
+
+              <td>
+                <input type="number" class="form-control"
+                       name="usedQty" value="{{ item.usedQty }}" step="0.01">
+              </td>
+
+              <td>
+                <button type="button" class="btn btn-outline-danger"
+                        onclick="removeRow(this)">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </td>
+            </tr>
+            {% endfor %}
+
+          </tbody>
+        </table>
+
+        <button type="button" class="btn btn-outline-primary" onclick="addRow()">
+          <i class="bi bi-plus-circle"></i> Adicionar ingrediente
+        </button>
+
+      </div>
+    </div>
+
+    <button class="btn btn-success btn-lg w-100">
+      <i class="bi bi-save"></i> Salvar alterações
+    </button>
+
+  </form>
+</div>
+
+<script>
+
+function addRow() {
+  const table = document.getElementById("items-table");
+  const tr = document.createElement("tr");
+
+  tr.innerHTML = `
+    <td>
+      <select name="ingredientId" class="form-select">
+        {% for ing in ingredients %}
+          <option value="{{ ing._id }}">{{ ing.name }} ({{ ing.unit }})</option>
+        {% endfor %}
+      </select>
+    </td>
+
+    <td>
+      <input type="number" class="form-control" name="usedQty" step="0.01">
+    </td>
+
+    <td>
+      <button type="button" class="btn btn-outline-danger" onclick="removeRow(this)">
+        <i class="bi bi-trash"></i>
+      </button>
+    </td>
+  `;
+
+  table.appendChild(tr);
+}
+
+function removeRow(btn) {
+  btn.closest("tr").remove();
+}
+
+</script>
+
+{% endblock %}
