@@ -14,7 +14,7 @@ const app = express();
 app.use(cors());
 app.use(express.static("public"));
 
-mongoose.connect(process.env.DB_URL, {
+mongoose.connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
