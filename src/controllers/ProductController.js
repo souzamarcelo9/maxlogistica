@@ -2,21 +2,25 @@ const moment = require("moment");
 const formatCurrency = require("../lib/formatCurrency");
 const Product = require("../models/Product");
 const normalizePrice = require("../lib/normalizePrice");
+const Size = require("../models/Size");
 
 class ProductController {
-  create(req, res) {
-    return res.render("product/register");
-  }
-
+  
+  async create(req, res) {
+  const sizes = await Size.find().sort({ quantity: 1 });
+  return res.render("product/list", { sizes });
+}
   createUpdate(req, res) {
     return res.render("product/updateproduct");
   }
 
   async index(req, res) {
+    
   try {
     const { nome, searchBarcode } = req.query;
     const page = parseInt(req.query.page) || 1;
     const limit = 10;
+    const units = ["g", "kg", "ml", "l", "un"];
 
     const filters = {};
 
@@ -27,6 +31,8 @@ class ProductController {
     if (searchBarcode) {
       filters.barcode = searchBarcode;
     }
+    
+    const sizes = await Size.find().sort({ quantity: 1 });
 
     // Consulta paginada usando paginate-v2
     const products = await Product.paginate(filters, {
@@ -52,6 +58,7 @@ class ProductController {
 
     return res.render("product/list", {
       products: finalProducts,
+      units,
       currentPage: products.page,
       totalPages: products.totalPages,
       pages,
@@ -71,7 +78,7 @@ class ProductController {
 }
 
   async store(req, res) {
-    const { name, salePrice, amount, expirationDate, barcode } = req.body;
+    const { name, salePrice, amount, expirationDate, barcode,unit } = req.body;
 
     if (!name || !salePrice || !amount) {
       let products = await Product.find();
@@ -110,6 +117,7 @@ class ProductController {
     await Product.create({
       ...req.body,
       salePrice: salePriceNormalized,
+      unit,
       expirationDate: !req.body.expirationDate
         ? null
         : moment(req.body.expirationDate).format(),
@@ -119,22 +127,18 @@ class ProductController {
   }
 
   async edit(req, res) {
-    const { id } = req.params;
+  const product = await Product.findById(req.params.id);
+  const units = ["g", "kg", "ml", "l", "un"];
 
-    let product = await Product.findById(id);
-
-    product.formattedExpirationDate = moment(product.expirationDate).format(
-      "YYYY-MM-DD"
-    );
-
-    return res.render("product/update", {
-      product: product,
-    });
-  }
+  return res.render("product/update", {
+    product,
+    units
+  });
+}
 
   async update(req, res) {
     const { id } = req.params;
-    const { name, salePrice, amount } = req.body;
+    const { barcode, name, amount, salePrice, expirationDate, size } = req.body;
 
     if (!name || !salePrice || !amount) {
       let product = await Product.findById(id);
@@ -166,6 +170,7 @@ class ProductController {
       {
         ...req.body,
         salePrice: salePriceNormalized,
+        size: size || null,
         expirationDate: !req.body.expirationDate
           ? null
           : moment(req.body.expirationDate).format(),

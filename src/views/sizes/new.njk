@@ -1,0 +1,39 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+
+<div class="container py-4">
+
+  <h2 class="fw-bold text-primary mb-4">
+    <i class="bi bi-rulers"></i> Novo Tamanho Padrão
+  </h2>
+
+  {% if message %}
+    <div class="alert alert-danger">{{ message }}</div>
+  {% endif %}
+
+  <form method="post" action="/sizes">
+
+    <div class="mb-3">
+      <label class="form-label">Etiqueta (ex: 300 ml, 500 g)</label>
+      <input type="text" name="label" class="form-control" value="{{ label }}">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Unidade (ml, g, un)</label>
+      <input type="text" name="unit" class="form-control" value="{{ unit }}">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Quantidade (ex: 500)</label>
+      <input type="number" name="quantity" class="form-control" value="{{ quantity }}">
+    </div>
+
+    <button class="btn btn-success w-100">
+      <i class="bi bi-save"></i> Salvar Tamanho
+    </button>
+
+  </form>
+</div>
+
+{% endblock %}

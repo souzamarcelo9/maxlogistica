@@ -15,7 +15,7 @@ const IngredientController = require("./controllers/IngredientController");
 const RecipeController = require("./controllers/RecipeController");
 const PrecificationController = require("./controllers/PrecificationController");
 const FixedCostController = require("./controllers/FixedCostController");
-
+const SizeController = require("./controllers/SizeController");
 
 const middleware = require("./middlewares/session");
 const session = require("express-session");
@@ -125,6 +125,12 @@ routes.post("/fixedcosts", FixedCostController.store);
 routes.get("/fixedcosts/edit/:id", FixedCostController.editForm);
 routes.post("/fixedcosts/edit/:id", FixedCostController.update);
 routes.post("/fixedcosts/delete/:id", FixedCostController.delete);
+
+// SIZES (tamanhos padrão)
+routes.get("/sizes", SizeController.index);
+routes.get("/sizes/new", SizeController.createForm);
+routes.post("/sizes", SizeController.store);
+routes.post("/sizes/delete/:id", SizeController.delete);
 
 routes.get("/entrancesandexits", (req, res) => {
   return res.render("entranceandexit/list");

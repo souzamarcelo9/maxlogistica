@@ -28,6 +28,15 @@
                     <input class="form-control" type="text" name="amount" placeholder="Quantidade" value="{{amount}}"/>
                 </div>
                 <div class="col-md-3">
+                <label class="form-label">UM</label>
+                <select name="unit" class="form-select">
+                    <option value="">Selecione</option>
+                    {% for u in units %}
+                    <option value="{{ u }}">{{ u }}</option>
+                    {% endfor %}
+                </select>
+                </div>
+                <div class="col-md-3">
                     <label class="form-label">Data de Vencimento</label>
                     <input class="form-control" type="date" name="expirationDate" placeholder="Data de validade" value="{{expirationDate}}"/>
                 </div>
@@ -55,6 +64,7 @@
                 <th>Nome</th>
                 <th>Preço de Venda</th>
                 <th>Quantidade</th>
+                <th>UM</th>
                 <th>Data de Vencimento</th>
                 <th>Ação</th>
             </tr>
@@ -64,6 +74,7 @@
                     <td>{{ product.name }}</td>
                     <td>{{ product.formattedSalePrice }}</td>
                     <td>{{ product.amount }}</td>
+                    <td>{{ product.unit }}</td>
                     <td>{{ product.formattedExpirationDate }}</td>
                     <td>
                         <div class="action">

@@ -28,6 +28,14 @@
                     <input class="form-control" type="text" name="amount" placeholder="Quantidade" value="{{product.amount}}"/>
                 </div>
                 <div class="col-md-3">
+                    <select name="unit" class="form-select">
+                        <option value="">Selecione</option>
+                        {% for u in units %}
+                        <option value="{{ u }}" {% if product.unit == u %}selected{% endif %}>{{ u }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
                     <label class="form-label">Data de Vencimento</label>
                     <input class="form-control" type="date" name="expirationDate" placeholder="Data de validade" value="{{product.formattedExpirationDate}}"/>
                 </div>

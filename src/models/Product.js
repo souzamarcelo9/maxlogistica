@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const mongoosePaginate = require("mongoose-paginate-v2");
+const Schema = mongoose.Schema;
 
 const ProductSchema = new mongoose.Schema({
   barcode: {
@@ -33,7 +34,12 @@ const ProductSchema = new mongoose.Schema({
   type: String,
   enum: ["FINAL", "OUTRO"],
   default: "FINAL",
-}
+},
+unit: {
+    type: String,
+    enum: ["g", "kg", "ml", "l", "un"],
+    required: false
+  },
 });
 
 ProductSchema.plugin(mongoosePaginate);
