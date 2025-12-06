@@ -135,7 +135,7 @@ const brokenRecipes = recipes.filter(r =>
     }));
 
     await Precification.create({
-      recipe: recipeId,
+      recipe: recipeId && recipeId.length === 24 ? recipeId : null,
       product: productId || null,
       productName,
       size,

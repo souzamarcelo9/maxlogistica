@@ -16,7 +16,7 @@ const PrecificationSchema = new Schema({
   recipe: {
     type: Schema.Types.ObjectId,
     ref: "Recipe",
-    required: true,
+    required: false,
   },
   product: {
     type: Schema.Types.ObjectId,
