@@ -14,21 +14,21 @@ const app = express();
 app.use(cors());
 app.use(express.static("public"));
 
-/* mongoose.connect(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log("MongoDB Atlas conectado!"))
-.catch(err => console.error("Erro ao conectar:", err)); */
-
-app.use(express.static("public"));
-
-mongoose.connect(process.env.DB_URL, {
+ mongoose.connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
 .then(() => console.log("MongoDB Atlas conectado!"))
 .catch(err => console.error("Erro ao conectar:", err));
+
+app.use(express.static("public"));
+
+//mongoose.connect(process.env.DB_URL, {
+  //useNewUrlParser: true,
+  //useUnifiedTopology: true
+//})
+//.then(() => console.log("MongoDB Atlas conectado!"))
+//.catch(err => console.error("Erro ao conectar:", err));
 
 app.use(session);
 app.use(bodyParser.urlencoded({ extended: true }));
