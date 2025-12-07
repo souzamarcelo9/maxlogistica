@@ -10,6 +10,8 @@ class RecipeController {
       .populate("items.ingredient")
       .sort({ createdAt: -1 });
 
+      //console.log(recipes);
+
     return res.render("recipes/list", { recipes });
   }
 
@@ -59,16 +61,28 @@ class RecipeController {
     return res.redirect("/recipes");
   }
 
-  // --- NOVO: FORMULÁRIO DE EDIÇÃO ---
+  
   async editForm(req, res) {
-    const recipe = await Recipe.findById(req.params.id)
-      .populate("items.ingredient");
+    const id = req.params.id;
 
-    const ingredients = await Ingredient.find().sort({ name: 1 });
+    const recipe = await Recipe.findById(id)
+      .populate("product")
+      .populate("items.ingredient")
+      .lean(); // <- importante: vira objeto “puro”
+
+    if (!recipe) {
+      
+      return res.redirect("/recipes");
+    }
+
+    const ingredients = await Ingredient.find().sort({ name: 1 }).lean();
+
+    const recipeJson = JSON.stringify(recipe);
 
     return res.render("recipes/edit", {
       recipe,
-      ingredients
+      ingredients,
+      recipeJson,
     });
   }
 
