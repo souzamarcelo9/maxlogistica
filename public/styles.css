@@ -43,6 +43,26 @@ a, a:hover, a:focus {
     overflow-y: auto;
     z-index: 1000;
 }
+/* LOGO DA SIDEBAR */
+.sidebar-logo {
+    width: 100%;
+    text-align: center;
+    padding: 10px 0 20px;
+}
+
+.sidebar-logo img {
+    width: 150px;                 /* Ajuste ideal para sidebar */
+    height: auto;
+    border-radius: 50%;           /* Mantém arredondado */
+    transition: transform .3s ease;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Efeito de zoom */
+.sidebar-logo img:hover {
+    transform: scale(1.08);
+}
 
 
 #sidebar ul p {

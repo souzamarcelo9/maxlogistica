@@ -45,8 +45,29 @@
               <td colspan="6" class="text-center text-muted py-3">Nenhum ingrediente cadastrado.</td>
             </tr>
           {% endfor %}
-        </tbody>
+        </tbody>        
       </table>
+      {% if totalPages > 1 %}
+        <nav aria-label="Paginação de ingredientes">
+          <ul class="pagination justify-content-center mt-3">
+
+            <li class="page-item {% if currentPage == 1 %}disabled{% endif %}">
+              <a class="page-link" href="/ingredients?page={{ currentPage - 1 }}">Anterior</a>
+            </li>
+
+            {% for p in range(1, totalPages + 1) %}
+              <li class="page-item {% if p == currentPage %}active{% endif %}">
+                <a class="page-link" href="/ingredients?page={{ p }}">{{ p }}</a>
+              </li>
+            {% endfor %}
+
+            <li class="page-item {% if currentPage == totalPages %}disabled{% endif %}">
+              <a class="page-link" href="/ingredients?page={{ currentPage + 1 }}">Próxima</a>
+            </li>
+
+          </ul>
+        </nav>
+        {% endif %}
     </div>
   </div>
 </div>

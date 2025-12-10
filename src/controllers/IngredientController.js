@@ -1,12 +1,20 @@
-// controllers/IngredientController.js
 const Ingredient = require("../models/Ingredient");
 
 class IngredientController {
   async index(req, res) {
-    const ingredients = await Ingredient.find().sort({ name: 1 });
+    const page = parseInt(req.query.page) || 1;
+
+    const { docs, totalPages, page: currentPage } =
+      await Ingredient.paginate({}, { 
+        sort: { name: 1 },
+        page,
+        limit: 10
+      });
 
     return res.render("ingredient/list", {
-      ingredients,
+      ingredients: docs,
+      totalPages,
+      currentPage
     });
   }
 
@@ -17,13 +25,7 @@ class IngredientController {
   async store(req, res) {
     const { name, type, unit, packageQty, packageCost } = req.body;
 
-    await Ingredient.create({
-      name,
-      type,
-      unit,
-      packageQty,
-      packageCost,
-    });
+    await Ingredient.create({ name, type, unit, packageQty, packageCost });
 
     return res.redirect("/ingredients");
   }
